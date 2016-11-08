@@ -1,0 +1,8 @@
+server:
+  port: 8002
+eureka:
+  client.serviceUrl.defaultZone: http://localhost:9000/eureka
+  instance:
+    app-group-name: microservices
+    hostname: localhost
+    appname: recommendations-service
