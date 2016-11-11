@@ -1,8 +1,7 @@
 package io.github.vdubois.controller;
 
-import org.springframework.http.HttpStatus;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,8 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RecommendationsRestController {
 
+    @HystrixCommand(fallbackMethod = "defaultMethod")
     @RequestMapping(value = "/hello", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> hello() {
-        return new ResponseEntity<>("Hello", HttpStatus.OK);
+    public String hello() {
+        return "Hello";
+    }
+
+    public String defaultMethod() {
+        return "Erreur";
     }
 }
