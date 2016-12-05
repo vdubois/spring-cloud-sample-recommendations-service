@@ -17,4 +17,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     Set<Book> getBooksRecommendationsForBookWithName(@Param(value = "bookName") String bookName);
 
     Collection<Book> findByNameContainingIgnoreCase(String name);
+
+    Book findOneByIsbn(String isbn);
 }

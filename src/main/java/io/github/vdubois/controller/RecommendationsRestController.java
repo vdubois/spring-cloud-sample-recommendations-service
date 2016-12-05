@@ -3,7 +3,6 @@ package io.github.vdubois.controller;
 import io.github.vdubois.model.Book;
 import io.github.vdubois.model.Recommendation;
 import io.github.vdubois.repository.BookRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,15 +23,15 @@ public class RecommendationsRestController {
 
     private BookRepository bookRepository;
 
-    @Autowired
     public RecommendationsRestController(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
 
-    @GetMapping(value = "/recommendations/by-book-name/{bookName}")
-    public ResponseEntity<List<Recommendation>> getRecommendationsForBookWithName(@PathVariable String bookName) {
+    @GetMapping(value = "/books/{isbn}/recommendations")
+    public ResponseEntity<List<Recommendation>> getRecommendationsForBookWithIsbn(@PathVariable(value = "isbn") String isbn) {
         Set<Book> recommendedBooks = new HashSet<>();
-        Stream.of(bookName.split(" "))
+        Book selectedBook = bookRepository.findOneByIsbn(isbn);
+        Stream.of(selectedBook.getName().split(" "))
                 .forEach(bookWord -> recommendedBooks.addAll(bookRepository.findByNameContainingIgnoreCase(bookWord)));
         List<Recommendation> recommentations = recommendedBooks.stream().map(book -> {
             Recommendation recommendation = new Recommendation();
