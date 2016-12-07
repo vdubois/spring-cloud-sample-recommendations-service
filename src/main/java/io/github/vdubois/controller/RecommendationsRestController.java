@@ -2,7 +2,7 @@ package io.github.vdubois.controller;
 
 import io.github.vdubois.model.Book;
 import io.github.vdubois.model.Recommendation;
-import io.github.vdubois.repository.BookRepository;
+import io.github.vdubois.service.BookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,18 +21,18 @@ import java.util.stream.Stream;
 @RestController
 public class RecommendationsRestController {
 
-    private BookRepository bookRepository;
+    private BookService bookService;
 
-    public RecommendationsRestController(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
+    public RecommendationsRestController(BookService bookService) {
+        this.bookService = bookService;
     }
 
     @GetMapping(value = "/books/{isbn}/recommendations")
     public ResponseEntity<List<Recommendation>> getRecommendationsForBookWithIsbn(@PathVariable(value = "isbn") String isbn) {
         Set<Book> recommendedBooks = new HashSet<>();
-        Book selectedBook = bookRepository.findOneByIsbn(isbn);
+        Book selectedBook = bookService.findOneByIsbn(isbn);
         Stream.of(selectedBook.getName().split(" "))
-                .forEach(bookWord -> recommendedBooks.addAll(bookRepository.findByNameContainingIgnoreCase(bookWord)));
+                .forEach(bookWord -> recommendedBooks.addAll(bookService.findByNameContainingIgnoreCase(bookWord)));
         List<Recommendation> recommentations = recommendedBooks.stream().map(book -> {
             Recommendation recommendation = new Recommendation();
             recommendation.setBookName(book.getName());
