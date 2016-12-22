@@ -23,6 +23,7 @@ public class RecommendationsInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
+        Thread.currentThread().sleep((long) (Math.random() * 10000));
         Stream.of("Cloud Native Java,978-1449374648","Effective Java,978-1449374649","Head First Design Patterns,978-1449374640").map(
                 recommendation -> {
                     Book bookRecommendation = new Book();
